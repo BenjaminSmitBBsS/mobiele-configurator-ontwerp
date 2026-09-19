@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { features } from "@/lib/configurator-data"
+import { useMemo, useState } from "react"
+import { basisKosten, features } from "@/lib/configurator-data"
 import { FeatureRow } from "./feature-row"
 import { PricingBar } from "./pricing-bar"
 import { SetupList } from "./setup-list"
@@ -12,7 +12,16 @@ export function ConfiguratorApp() {
     Object.fromEntries(features.map((feature) => [feature.id, feature.defaultSelected])),
   )
 
-  const activeCount = features.filter((feature) => selected[feature.id]).length
+  const selectedFeatures = useMemo(() => features.filter((feature) => selected[feature.id]), [selected])
+  const activeCount = selectedFeatures.length
+
+  const totals = useMemo(
+    () => ({
+      opstart: basisKosten.opstart + selectedFeatures.reduce((sum, feature) => sum + feature.opstart, 0),
+      maand: basisKosten.maand + selectedFeatures.reduce((sum, feature) => sum + feature.maand, 0),
+    }),
+    [selectedFeatures],
+  )
 
   function toggleFeature(id: string) {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -55,7 +64,7 @@ export function ConfiguratorApp() {
         </div>
       </div>
 
-      <PricingBar />
+      <PricingBar selectedFeatures={selectedFeatures} opstartTotal={totals.opstart} maandTotal={totals.maand} />
     </div>
   )
 }

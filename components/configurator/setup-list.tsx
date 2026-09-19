@@ -1,5 +1,6 @@
 import { CheckCircle2, MinusCircle } from "lucide-react"
 import type { Feature } from "@/lib/configurator-data"
+import { formatCurrency } from "@/lib/configurator-data"
 import { cn } from "@/lib/utils"
 
 export function SetupList({
@@ -33,10 +34,18 @@ export function SetupList({
                 />
               )}
               <span
-                className={cn("text-sm font-medium", isActive ? "text-foreground" : "text-muted-foreground/60")}
+                className={cn(
+                  "flex-1 text-sm font-medium",
+                  isActive ? "text-foreground" : "text-muted-foreground/60",
+                )}
               >
                 {feature.moduleLabel}
               </span>
+              {isActive && (
+                <span className="shrink-0 text-xs font-semibold text-primary">
+                  +{formatCurrency(feature.opstart)} · {formatCurrency(feature.maand)}/mnd
+                </span>
+              )}
             </li>
           )
         })}
