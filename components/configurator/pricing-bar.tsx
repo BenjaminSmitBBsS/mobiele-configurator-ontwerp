@@ -1,5 +1,9 @@
+"use client"
+
+import { useState } from "react"
 import type { Feature } from "@/lib/configurator-data"
 import { formatCurrency } from "@/lib/configurator-data"
+import { RequestModal } from "./request-modal"
 
 export function PricingBar({
   selectedFeatures,
@@ -10,6 +14,8 @@ export function PricingBar({
   opstartTotal: number
   maandTotal: number
 }) {
+  const [modalOpen, setModalOpen] = useState(false)
+
   return (
     <div className="flex shrink-0 flex-col gap-3 border-t border-border bg-muted px-[18px] py-4">
       {selectedFeatures.length > 0 && (
@@ -32,11 +38,20 @@ export function PricingBar({
         </div>
         <button
           type="button"
+          onClick={() => setModalOpen(true)}
           className="shrink-0 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Pakket Aanvragen
         </button>
       </div>
+
+      <RequestModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        selectedFeatures={selectedFeatures}
+        opstartTotal={opstartTotal}
+        maandTotal={maandTotal}
+      />
     </div>
   )
 }
